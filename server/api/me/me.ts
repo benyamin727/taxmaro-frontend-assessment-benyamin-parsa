@@ -99,8 +99,6 @@ class Me {
     try {
       const validation = await meSchema.partial().parseAsync(newData);
 
-      console.log("validation:", validation);
-
       if (validation) {
         this.data = {
           ...this.data,
