@@ -50,6 +50,7 @@ const rules = {
 };
 
 async function onSubmit() {
+  if (!formRef.value?.validate) return;
   const { valid: isValid } = await formRef.value.validate();
   if (!isValid) {
     error.value = "Please correct the highlighted fields.";
@@ -66,7 +67,7 @@ async function onSubmit() {
         paymentMethod: form.paymentMethod,
         bankName: form.bankName,
         bankBic: form.bankBic,
-        iban: form.iban.replaceAll(" ", ""), // نرمال‌سازی
+        iban: form.iban.replaceAll(" ", ""),
         id: form.id,
         bankId: form.bankId,
       },
@@ -79,7 +80,6 @@ async function onSubmit() {
   }
 }
 
-// گزینه‌های پرداخت مطابق UI نمونه
 const paymentOptions = [
   { title: "Cash", value: "cash" },
   { title: "Bank Transfer", value: "bank_transfer" },
@@ -167,7 +167,13 @@ const paymentOptions = [
             </v-row>
 
             <div class="bank__actions mt-6">
-              <v-btn class="bank__save" color="primary" block @click="onSubmit">
+              <v-btn
+                data-test="save-btn"
+                class="bank__save"
+                color="primary"
+                block
+                @click="onSubmit"
+              >
                 Save
               </v-btn>
             </div>

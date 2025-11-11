@@ -61,7 +61,7 @@ const rules = {
 };
 
 const onSubmit = async () => {
-  console.log(personalFormRef);
+  if (!personalFormRef.value?.validate) return;
   const { valid: isValid } = await personalFormRef.value.validate();
   if (!isValid) {
     error.value = "Please correct the highlighted fields.";
@@ -94,6 +94,7 @@ const onSubmit = async () => {
             <v-text-field
               v-model="form.firstName"
               class="personal__field"
+              data-test="firstName"
               label="First name"
               variant="outlined"
               density="comfortable"
@@ -102,6 +103,7 @@ const onSubmit = async () => {
             <v-text-field
               v-model="form.lastName"
               class="personal__field"
+              data-test="lastName"
               label="Last name"
               variant="outlined"
               density="comfortable"
@@ -110,6 +112,7 @@ const onSubmit = async () => {
             <v-text-field
               v-model="form.email"
               class="personal__field"
+              data-test="email"
               label="E-mail"
               variant="outlined"
               density="comfortable"
@@ -118,6 +121,7 @@ const onSubmit = async () => {
             <v-text-field
               v-model="form.phone"
               class="personal__field"
+              data-test="phone"
               label="Phone"
               variant="outlined"
               density="comfortable"
@@ -126,6 +130,7 @@ const onSubmit = async () => {
             <v-text-field
               v-model="form.position"
               class="personal__field"
+              data-test="position"
               label="Position"
               variant="outlined"
               density="comfortable"
@@ -134,6 +139,7 @@ const onSubmit = async () => {
             <v-text-field
               v-model="form.department"
               class="personal__field"
+              data-test="department"
               label="Department (optional)"
               variant="outlined"
               density="comfortable"
@@ -150,6 +156,7 @@ const onSubmit = async () => {
               v-model="form.country"
               class="personal__field"
               label="Country"
+              data-test="country"
               variant="outlined"
               density="comfortable"
               :rules="rules.country"
@@ -157,6 +164,7 @@ const onSubmit = async () => {
             <v-text-field
               v-model="form.zip"
               class="personal__field"
+              data-test="zip"
               label="Postcode"
               variant="outlined"
               density="comfortable"
@@ -165,6 +173,7 @@ const onSubmit = async () => {
             <v-text-field
               v-model="form.state"
               class="personal__field"
+              data-test="state"
               label="State"
               variant="outlined"
               density="comfortable"
@@ -173,6 +182,7 @@ const onSubmit = async () => {
             <v-text-field
               v-model="form.city"
               class="personal__field"
+              data-test="city"
               label="City"
               variant="outlined"
               density="comfortable"
@@ -181,6 +191,7 @@ const onSubmit = async () => {
             <v-text-field
               v-model="form.address"
               class="personal__field"
+              data-test="address"
               label="Street / Address"
               variant="outlined"
               density="comfortable"
@@ -191,7 +202,13 @@ const onSubmit = async () => {
       </v-row>
 
       <div class="personal__actions">
-        <v-btn class="personal__save" color="primary" block @click="onSubmit">
+        <v-btn
+          data-test="save-btn"
+          class="personal__save"
+          color="primary"
+          block
+          @click="onSubmit"
+        >
           Save
         </v-btn>
       </div>

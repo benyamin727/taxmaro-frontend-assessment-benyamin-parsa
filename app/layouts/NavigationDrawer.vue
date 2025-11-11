@@ -6,6 +6,7 @@
         title="Personal Data"
         link
         :to="{ path: '/personal-data/personal' }"
+        :active="$route.path.startsWith('/personal-data')"
       />
     </v-list>
   </v-navigation-drawer>

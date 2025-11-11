@@ -2,7 +2,7 @@
 import { reactive, ref, watchEffect } from "vue";
 import { useMe } from "~/composables/useMe";
 import { required, minLen, combine } from "~/utils/validation";
-
+import { getErrorMessage } from "~/utils/helper";
 const { data, update } = useMe();
 
 const formRef = ref();
@@ -111,6 +111,7 @@ const hiTypeOptions = [
 ];
 
 async function onSubmit() {
+  if (!formRef.value?.validate) return;
   const { valid: isValid } = await formRef.value.validate();
   if (!isValid) {
     error.value = "Please correct the highlighted fields.";
@@ -129,9 +130,8 @@ async function onSubmit() {
       information: form.information,
       employmentStatus: form.employmentStatus,
       secondSalary: form.secondSalary,
-      taxId: "",
+      taxId: form.noTaxId ? "N/A" : form.taxId,
     };
-    if (!form.noTaxId) tax.taxId = form.taxId;
 
     const insurance = {
       noSsn: form.noSsn,
@@ -148,9 +148,8 @@ async function onSubmit() {
       lastPrivateHealthInsurance: form.lastPrivateHealthInsurance,
       haveChildren: form.haveChildren,
       requestFromPensionInsurance: form.requestFromPensionInsurance,
-      ssn: "",
+      ssn: form.noSsn ? "N/A" : form.ssn,
     };
-    if (!form.noSsn) insurance.ssn = form.ssn;
 
     await update({ tax, insurance });
     success.value = true;
@@ -356,7 +355,12 @@ async function onSubmit() {
       </v-row>
 
       <div class="tax__actions mt-2">
-        <v-btn class="tax__save" block :loading="saving" @click="onSubmit"
+        <v-btn
+          data-test="save-btn"
+          class="tax__save"
+          block
+          :loading="saving"
+          @click="onSubmit"
           >SAVE</v-btn
         >
       </div>
