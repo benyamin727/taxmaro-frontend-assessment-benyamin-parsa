@@ -1,0 +1,238 @@
+<script setup lang="ts">
+import { reactive, ref, watchEffect } from "vue";
+import { useMe } from "~/composables/useMe";
+import {
+  required,
+  email,
+  phoneLite,
+  postalLite,
+  minLen,
+  combine,
+} from "~/utils/validation";
+
+const { data, updatePersonal } = useMe();
+const valid = ref(false);
+const saving = ref(false);
+const success = ref(false);
+const error = ref<string | null>(null);
+const personalFormRef = ref();
+const form = reactive({
+  firstName: "",
+  lastName: "",
+  email: "",
+  phone: "",
+  country: "",
+  zip: "",
+  state: "",
+  city: "",
+  address: "",
+  position: "",
+  department: "",
+});
+
+watchEffect(() => {
+  const d = data.value;
+  if (!d) return;
+  form.firstName = d.firstName ?? "";
+  form.lastName = d.lastName ?? "";
+  form.email = d.email ?? "";
+  form.phone = d.phone ?? "";
+  form.country = d.country ?? "";
+  form.zip = d.zip ?? "";
+  form.state = d.state ?? "";
+  form.city = d.city ?? "";
+  form.address = d.address ?? "";
+  form.position = d.position ?? "";
+  form.department = d.department ?? "";
+});
+
+const rules = {
+  firstName: [combine(required, minLen(2))],
+  lastName: [combine(required, minLen(2))],
+  email: [combine(required, email)],
+  phone: [combine(required, phoneLite)],
+  position: [required],
+  department: [],
+  country: [required],
+  zip: [combine(required, postalLite)],
+  state: [required],
+  city: [required],
+  address: [combine(required, minLen(3))],
+};
+
+const onSubmit = async () => {
+  console.log(personalFormRef);
+  const { valid: isValid } = await personalFormRef.value.validate();
+  if (!isValid) {
+    error.value = "Please correct the highlighted fields.";
+    return;
+  }
+
+  saving.value = true;
+  error.value = null;
+  success.value = false;
+
+  try {
+    await updatePersonal({ ...form });
+    success.value = true;
+  } catch (err: unknown) {
+    error.value = getErrorMessage(err);
+  } finally {
+    saving.value = false;
+  }
+};
+</script>
+
+<template>
+  <section class="personal">
+    <v-form ref="personalFormRef" v-model="valid">
+      <v-row>
+        <v-col cols="12" md="6">
+          <div class="personal__group">
+            <h3 class="personal__group-title">General</h3>
+
+            <v-text-field
+              v-model="form.firstName"
+              class="personal__field"
+              label="First name"
+              variant="outlined"
+              density="comfortable"
+              :rules="rules.firstName"
+            />
+            <v-text-field
+              v-model="form.lastName"
+              class="personal__field"
+              label="Last name"
+              variant="outlined"
+              density="comfortable"
+              :rules="rules.lastName"
+            />
+            <v-text-field
+              v-model="form.email"
+              class="personal__field"
+              label="E-mail"
+              variant="outlined"
+              density="comfortable"
+              :rules="rules.email"
+            />
+            <v-text-field
+              v-model="form.phone"
+              class="personal__field"
+              label="Phone"
+              variant="outlined"
+              density="comfortable"
+              :rules="rules.phone"
+            />
+            <v-text-field
+              v-model="form.position"
+              class="personal__field"
+              label="Position"
+              variant="outlined"
+              density="comfortable"
+              :rules="rules.position"
+            />
+            <v-text-field
+              v-model="form.department"
+              class="personal__field"
+              label="Department (optional)"
+              variant="outlined"
+              density="comfortable"
+              :rules="rules.department"
+            />
+          </div>
+        </v-col>
+
+        <v-col cols="12" md="6">
+          <div class="personal__group">
+            <h3 class="personal__group-title">Address</h3>
+
+            <v-text-field
+              v-model="form.country"
+              class="personal__field"
+              label="Country"
+              variant="outlined"
+              density="comfortable"
+              :rules="rules.country"
+            />
+            <v-text-field
+              v-model="form.zip"
+              class="personal__field"
+              label="Postcode"
+              variant="outlined"
+              density="comfortable"
+              :rules="rules.zip"
+            />
+            <v-text-field
+              v-model="form.state"
+              class="personal__field"
+              label="State"
+              variant="outlined"
+              density="comfortable"
+              :rules="rules.state"
+            />
+            <v-text-field
+              v-model="form.city"
+              class="personal__field"
+              label="City"
+              variant="outlined"
+              density="comfortable"
+              :rules="rules.city"
+            />
+            <v-text-field
+              v-model="form.address"
+              class="personal__field"
+              label="Street / Address"
+              variant="outlined"
+              density="comfortable"
+              :rules="rules.address"
+            />
+          </div>
+        </v-col>
+      </v-row>
+
+      <div class="personal__actions">
+        <v-btn class="personal__save" color="primary" block @click="onSubmit">
+          Save
+        </v-btn>
+      </div>
+      <v-alert v-if="success" type="success" variant="tonal" class="mt-4">
+        Information saved successfully 🎉
+      </v-alert>
+      <v-alert v-if="error" type="error" variant="tonal" class="mt-4">
+        {{ error }}
+      </v-alert>
+    </v-form>
+  </section>
+</template>
+
+<style scoped>
+.personal {
+  display: block;
+}
+.personal__group {
+  padding: 16px;
+  background: #fff;
+}
+.personal__group + .personal__group {
+  margin-top: 16px;
+}
+.personal__group-title {
+  margin: 0 0 12px;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #3b3b3b;
+}
+.personal__field {
+  margin-bottom: 12px;
+}
+.personal__actions {
+  display: flex;
+  justify-content: center;
+  padding-top: 16px;
+}
+.personal__save {
+  max-width: 220px;
+  background: #1c1c1c !important;
+  color: #fff !important;
+}
+</style>

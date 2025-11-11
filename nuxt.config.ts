@@ -1,7 +1,7 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   compatibilityDate: "2025-07-15",
-  devtools: { enabled: true },
+  devtools: { enabled: false },
   modules: ["@nuxt/eslint", "@nuxt/fonts", "vuetify-nuxt-module"],
   ssr: true,
 
@@ -19,6 +19,7 @@ export default defineNuxtConfig({
     ssr: {
       noExternal: ["vuetify"],
     },
+    server: { hmr: { overlay: false } } 
   },
 
   css: [],
