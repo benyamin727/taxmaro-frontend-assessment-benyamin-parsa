@@ -192,15 +192,15 @@ async function onSubmit() {
               color="primary"
               hide-details
               class="mb-2"
-              :label="form.noTaxId ? 'No Tax ID' : 'Have Tax ID'"
+              label="Dont Have Tax ID"
             />
             <v-text-field
               v-model="form.taxId"
               :disabled="form.noTaxId"
               label="Tax ID"
-              counter="11"
               variant="outlined"
               density="comfortable"
+              class="mb-2"
               :loading="saving"
               :rules="rules.taxId"
             />
@@ -270,16 +270,16 @@ async function onSubmit() {
               color="primary"
               hide-details
               class="mb-2"
-              :label="form.noSsn ? 'No SSN' : 'Have SSN'"
+              label="Dont Have SSN"
             />
             <v-text-field
               v-model="form.ssn"
               :disabled="form.noSsn"
               label="SSN"
-              counter="12"
               variant="outlined"
               density="comfortable"
               :loading="saving"
+              class="mb-2"
               :rules="rules.ssn"
             />
             <v-text-field
@@ -287,6 +287,7 @@ async function onSubmit() {
               label="Place of birth"
               variant="outlined"
               density="comfortable"
+              class="mb-2"
               :loading="saving"
               :rules="rules.birthCountry"
             />
@@ -294,6 +295,7 @@ async function onSubmit() {
               v-model="form.birthName"
               label="Birth name"
               variant="outlined"
+              class="mb-2"
               :loading="saving"
               density="comfortable"
               :rules="rules.birthName"
@@ -304,6 +306,7 @@ async function onSubmit() {
               :items="hiTypeOptions"
               item-title="title"
               item-value="value"
+              class="mb-2"
               label="Health insurance type"
               variant="outlined"
               density="comfortable"
@@ -315,6 +318,7 @@ async function onSubmit() {
               label="Health insurance"
               variant="outlined"
               density="comfortable"
+              class="mb-2"
               :loading="saving"
               :rules="rules.healthInsurance"
             />
@@ -323,6 +327,7 @@ async function onSubmit() {
               label="Desired health insurance company"
               variant="outlined"
               density="comfortable"
+              class="mb-2"
               :loading="saving"
               :rules="rules.desiredHealthInsuranceCompany"
             />
@@ -332,6 +337,7 @@ async function onSubmit() {
               label="Private health insurance name"
               variant="outlined"
               density="comfortable"
+              class="mb-2"
               :loading="saving"
               :rules="rules.privateHealthInsuranceName"
             />
@@ -340,6 +346,7 @@ async function onSubmit() {
               label="Private health insurance contribution"
               variant="outlined"
               density="comfortable"
+              class="mb-2"
               :loading="saving"
               :rules="rules.privateHealthInsuranceContribution"
             />
@@ -348,6 +355,7 @@ async function onSubmit() {
               label="Private nursing insurance contribution"
               variant="outlined"
               density="comfortable"
+              class="mb-2"
               :loading="saving"
               :rules="rules.privateNursingInsuranceContribution"
             />
@@ -356,6 +364,7 @@ async function onSubmit() {
               label="Last private health insurance"
               variant="outlined"
               density="comfortable"
+              class="mb-2"
               :loading="saving"
               :rules="rules.lastPrivateHealthInsurance"
             />
