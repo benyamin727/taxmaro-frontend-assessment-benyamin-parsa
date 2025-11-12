@@ -113,6 +113,7 @@ const onSubmit = async () => {
               label="First name"
               variant="outlined"
               density="comfortable"
+              :loading="saving"
               :rules="rules.firstName"
             />
             <v-text-field
@@ -122,6 +123,7 @@ const onSubmit = async () => {
               label="Last name"
               variant="outlined"
               density="comfortable"
+              :loading="saving"
               :rules="rules.lastName"
             />
             <v-text-field
@@ -131,6 +133,7 @@ const onSubmit = async () => {
               label="E-mail"
               variant="outlined"
               density="comfortable"
+              :loading="saving"
               :rules="rules.email"
             />
             <v-text-field
@@ -140,6 +143,7 @@ const onSubmit = async () => {
               label="Phone"
               variant="outlined"
               density="comfortable"
+              :loading="saving"
               :rules="rules.phone"
             />
             <v-text-field
@@ -149,6 +153,7 @@ const onSubmit = async () => {
               label="Position"
               variant="outlined"
               density="comfortable"
+              :loading="saving"
               :rules="rules.position"
             />
             <v-text-field
@@ -158,6 +163,7 @@ const onSubmit = async () => {
               label="Department (optional)"
               variant="outlined"
               density="comfortable"
+              :loading="saving"
               :rules="rules.department"
             />
           </div>
@@ -174,6 +180,7 @@ const onSubmit = async () => {
               data-test="country"
               variant="outlined"
               density="comfortable"
+              :loading="saving"
               :rules="rules.country"
             />
             <v-text-field
@@ -183,6 +190,7 @@ const onSubmit = async () => {
               label="Postcode"
               variant="outlined"
               density="comfortable"
+              :loading="saving"
               :rules="rules.zip"
             />
             <v-text-field
@@ -192,6 +200,7 @@ const onSubmit = async () => {
               label="State"
               variant="outlined"
               density="comfortable"
+              :loading="saving"
               :rules="rules.state"
             />
             <v-text-field
@@ -201,6 +210,7 @@ const onSubmit = async () => {
               label="City"
               variant="outlined"
               density="comfortable"
+              :loading="saving"
               :rules="rules.city"
             />
             <v-text-field
@@ -210,6 +220,7 @@ const onSubmit = async () => {
               label="Street / Address"
               variant="outlined"
               density="comfortable"
+              :loading="saving"
               :rules="rules.address"
             />
           </div>
@@ -222,6 +233,7 @@ const onSubmit = async () => {
           class="personal__save"
           color="primary"
           block
+          :loading="saving"
           @click="onSubmit"
         >
           Save

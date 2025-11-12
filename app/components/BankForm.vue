@@ -111,6 +111,7 @@ const paymentOptions = [
               label="Payee"
               variant="outlined"
               density="comfortable"
+              :loading="saving"
               :rules="rules.payee"
               class="mb-6"
             />
@@ -126,6 +127,7 @@ const paymentOptions = [
                 :key="opt.value"
                 :label="opt.title"
                 :value="opt.value"
+                :loading="saving"
               />
             </v-radio-group>
 
@@ -136,6 +138,7 @@ const paymentOptions = [
                   label="Bank name"
                   variant="outlined"
                   density="comfortable"
+                  :loading="saving"
                   :rules="rules.bankName"
                 />
               </v-col>
@@ -146,6 +149,7 @@ const paymentOptions = [
                   variant="outlined"
                   density="comfortable"
                   :rules="rules.bankBic"
+                  :loading="saving"
                   placeholder="e.g. NTSBDEB1XXX"
                 />
               </v-col>
@@ -156,6 +160,7 @@ const paymentOptions = [
                   variant="outlined"
                   density="comfortable"
                   :rules="rules.iban"
+                  :loading="saving"
                   placeholder="DE44 1234 1234 1234 1234 12"
                 />
               </v-col>
@@ -165,6 +170,7 @@ const paymentOptions = [
                   label="ID"
                   variant="outlined"
                   density="comfortable"
+                  :loading="saving"
                   :rules="rules.id"
                 />
               </v-col>
@@ -174,6 +180,7 @@ const paymentOptions = [
                   label="Bank ID"
                   variant="outlined"
                   density="comfortable"
+                  :loading="saving"
                   :rules="rules.bankId"
                 />
               </v-col>
@@ -185,6 +192,7 @@ const paymentOptions = [
                 class="bank__save"
                 color="primary"
                 block
+                :loading="saving"
                 @click="onSubmit"
               >
                 Save
