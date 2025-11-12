@@ -366,7 +366,7 @@ async function onSubmit() {
       </div>
 
       <v-alert v-if="success" type="success" variant="tonal" class="mt-4">
-        Tax & Insurance data saved successfully
+        {{ "Tax and Insurance data saved successfully" }}
       </v-alert>
       <v-alert v-if="error" type="error" variant="tonal" class="mt-4">
         {{ error }}

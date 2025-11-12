@@ -9,7 +9,7 @@ import {
   minLen,
   combine,
 } from "~/utils/validation";
-
+import { getErrorMessage } from "~/utils/helper";
 const { data, updatePersonal } = useMe();
 const valid = ref(false);
 const saving = ref(false);
@@ -76,6 +76,7 @@ const onSubmit = async () => {
     await updatePersonal({ ...form });
     success.value = true;
   } catch (err: unknown) {
+    success.value = false;
     error.value = getErrorMessage(err);
   } finally {
     saving.value = false;
