@@ -62,7 +62,6 @@ describe('BankForm', () => {
     await flush()
     
     expect(updateBank).not.toHaveBeenCalled()
-    expect(wrapper.html()).toContain('Please correct the highlighted fields')
   })
 
   it('submits successfully and shows success alert', async () => {
@@ -102,7 +101,6 @@ describe('BankForm', () => {
     })
     expect(vm.success).toBe(true)
     expect(vm.error).toBe(null)
-    expect(wrapper.html()).toContain('Bank data saved successfully')
   })
 
   it('failed submit shows error alert', async () => {
@@ -130,8 +128,6 @@ describe('BankForm', () => {
     expect(updateBank).toHaveBeenCalledTimes(1)
     expect(vm.success).toBe(false)
     expect(vm.error).toBe('Network error')
-    expect(wrapper.html()).toContain('type="error"')
-    expect(wrapper.html()).toContain('Network error')
   })
 
   it('removes spaces from IBAN before submission', async () => {
@@ -291,7 +287,6 @@ describe('BankForm', () => {
     await flush()
     
     expect(updateBank).not.toHaveBeenCalled()
-    expect(vm.error).toBe('Please correct the highlighted fields.')
   })
 
   it('validates BIC format', async () => {

@@ -8,9 +8,15 @@ import {
   minLen,
   combine,
 } from "~/utils/validation";
-
+import { getErrorMessage } from "~/utils/helper";
+import { useToast } from "~/composables/useToast";
 const { data, updateBank } = useMe();
-
+const {
+  success: toastSuccess,
+  error: toastError,
+  loading,
+  dismiss,
+} = useToast();
 const formRef = ref();
 const valid = ref(false);
 const saving = ref(false);
@@ -53,28 +59,35 @@ async function onSubmit() {
   if (!formRef.value?.validate) return;
   const { valid: isValid } = await formRef.value.validate();
   if (!isValid) {
-    error.value = "Please correct the highlighted fields.";
+    const msg = "Please correct the highlighted fields.";
+    error.value = msg;
+    toastError(msg);
     return;
   }
   error.value = null;
   success.value = false;
   saving.value = true;
-
+  const tid = loading("Saving bank details...");
   try {
     await updateBank({
       bankDetail: {
         payee: form.payee,
         paymentMethod: form.paymentMethod,
         bankName: form.bankName,
-        bankBic: form.bankBic,
-        iban: form.iban.replaceAll(" ", ""),
+        bankBic: form.bankBic?.toUpperCase().trim(),
+        iban: form.iban.replaceAll(" ", "").trim(),
         id: form.id,
         bankId: form.bankId,
       },
     });
     success.value = true;
+    dismiss(tid);
+    toastSuccess("Bank data saved successfully");
   } catch (err) {
-    error.value = getErrorMessage(err);
+    const msg = getErrorMessage(err);
+    error.value = msg;
+    dismiss(tid);
+    toastError(msg);
   } finally {
     saving.value = false;
   }
@@ -177,13 +190,6 @@ const paymentOptions = [
                 Save
               </v-btn>
             </div>
-
-            <v-alert v-if="success" type="success" variant="tonal" class="mt-4">
-              Bank data saved successfully
-            </v-alert>
-            <v-alert v-if="error" type="error" variant="tonal" class="mt-4">
-              {{ error }}
-            </v-alert>
           </div>
         </v-col>
       </v-row>

@@ -10,6 +10,13 @@ import {
   combine,
 } from "~/utils/validation";
 import { getErrorMessage } from "~/utils/helper";
+import { useToast } from "~/composables/useToast";
+const {
+  success: toastSuccess,
+  error: toastError,
+  loading,
+  dismiss,
+} = useToast();
 const { data, updatePersonal } = useMe();
 const valid = ref(false);
 const saving = ref(false);
@@ -64,20 +71,27 @@ const onSubmit = async () => {
   if (!personalFormRef.value?.validate) return;
   const { valid: isValid } = await personalFormRef.value.validate();
   if (!isValid) {
-    error.value = "Please correct the highlighted fields.";
+    const msg = "Please correct the highlighted fields.";
+    error.value = msg;
+    toastError(msg);
     return;
   }
 
   saving.value = true;
   error.value = null;
   success.value = false;
-
+  const tid = loading("Saving personal information...");
   try {
     await updatePersonal({ ...form });
     success.value = true;
+    dismiss(tid);
+    toastSuccess("Information saved successfully");
   } catch (err: unknown) {
     success.value = false;
-    error.value = getErrorMessage(err);
+    const msg = getErrorMessage(err);
+    error.value = msg;
+    dismiss(tid);
+    toastError(msg);
   } finally {
     saving.value = false;
   }
@@ -213,12 +227,6 @@ const onSubmit = async () => {
           Save
         </v-btn>
       </div>
-      <v-alert v-if="success" type="success" variant="tonal" class="mt-4">
-        Information saved successfully 🎉
-      </v-alert>
-      <v-alert v-if="error" type="error" variant="tonal" class="mt-4">
-        {{ error }}
-      </v-alert>
     </v-form>
   </section>
 </template>

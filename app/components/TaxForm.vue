@@ -3,8 +3,14 @@ import { reactive, ref, watchEffect } from "vue";
 import { useMe } from "~/composables/useMe";
 import { required, minLen, combine } from "~/utils/validation";
 import { getErrorMessage } from "~/utils/helper";
+import { useToast } from "~/composables/useToast";
 const { data, update } = useMe();
-
+const {
+  success: toastSuccess,
+  error: toastError,
+  loading,
+  dismiss,
+} = useToast();
 const formRef = ref();
 const valid = ref(false);
 const saving = ref(false);
@@ -38,7 +44,7 @@ const form = reactive({
 watchEffect(() => {
   const d = data.value;
   if (!d) return;
-  form.taxId = d.tax?.taxId ?? "";
+  form.taxId = d.tax.taxId == "0" ? "" : d.tax?.taxId ?? null;
   form.noTaxId = d.tax?.noTaxId ?? false;
   form.extraJob = d.tax?.extraJob ?? "";
   form.disability = d.tax?.disability ?? "";
@@ -46,7 +52,7 @@ watchEffect(() => {
   form.employmentStatus = d.tax?.employmentStatus ?? "";
   form.secondSalary = d.tax?.secondSalary ?? "";
 
-  form.ssn = d.insurance?.ssn ?? "";
+  form.ssn = d.insurance?.ssn == "0" ? "" : d.insurance?.ssn ?? null;
   form.noSsn = d.insurance?.noSsn ?? false;
   form.birthCountry = d.insurance?.birthCountry ?? "";
   form.birthName = d.insurance?.birthName ?? "";
@@ -115,13 +121,15 @@ async function onSubmit() {
   const { valid: isValid } = await formRef.value.validate();
   if (!isValid) {
     error.value = "Please correct the highlighted fields.";
+    const msg = "Please correct the highlighted fields.";
+    toastError(msg);
     return;
   }
 
   error.value = null;
   success.value = false;
   saving.value = true;
-
+  const tid = loading("Saving Tax & Insurance data...");
   try {
     const tax = {
       noTaxId: form.noTaxId,
@@ -130,7 +138,7 @@ async function onSubmit() {
       information: form.information,
       employmentStatus: form.employmentStatus,
       secondSalary: form.secondSalary,
-      taxId: form.noTaxId ? "N/A" : form.taxId,
+      taxId: form.noTaxId ? "0" : form.taxId,
     };
 
     const insurance = {
@@ -148,13 +156,18 @@ async function onSubmit() {
       lastPrivateHealthInsurance: form.lastPrivateHealthInsurance,
       haveChildren: form.haveChildren,
       requestFromPensionInsurance: form.requestFromPensionInsurance,
-      ssn: form.noSsn ? "N/A" : form.ssn,
+      ssn: form.noSsn ? "0" : form.ssn,
     };
 
     await update({ tax, insurance });
     success.value = true;
+    dismiss(tid);
+    toastSuccess("Tax and Insurance data saved successfully");
   } catch (err) {
-    error.value = getErrorMessage(err);
+    const msg = getErrorMessage(err);
+    error.value = msg;
+    dismiss(tid);
+    toastError(msg);
   } finally {
     saving.value = false;
   }
@@ -184,6 +197,7 @@ async function onSubmit() {
               counter="11"
               variant="outlined"
               density="comfortable"
+              :loading="saving"
               :rules="rules.taxId"
             />
             <v-select
@@ -192,6 +206,7 @@ async function onSubmit() {
               label="Degree of disability"
               variant="outlined"
               density="comfortable"
+              :loading="saving"
               :rules="rules.disability"
             />
             <div class="text-subtitle-2 mt-4 mb-1">
@@ -213,6 +228,7 @@ async function onSubmit() {
               label="Employment status"
               variant="outlined"
               density="comfortable"
+              :loading="saving"
               :rules="rules.employmentStatus"
             />
             <div class="text-subtitle-2 mt-4 mb-1">
@@ -234,6 +250,7 @@ async function onSubmit() {
               label="Extra Tax or Employment information"
               rows="4"
               variant="outlined"
+              :loading="saving"
               :rules="rules.information"
             />
           </div>
@@ -258,6 +275,7 @@ async function onSubmit() {
               counter="12"
               variant="outlined"
               density="comfortable"
+              :loading="saving"
               :rules="rules.ssn"
             />
             <v-text-field
@@ -265,12 +283,14 @@ async function onSubmit() {
               label="Place of birth"
               variant="outlined"
               density="comfortable"
+              :loading="saving"
               :rules="rules.birthCountry"
             />
             <v-text-field
               v-model="form.birthName"
               label="Birth name"
               variant="outlined"
+              :loading="saving"
               density="comfortable"
               :rules="rules.birthName"
             />
@@ -283,6 +303,7 @@ async function onSubmit() {
               label="Health insurance type"
               variant="outlined"
               density="comfortable"
+              :loading="saving"
               :rules="rules.healthInsuranceType"
             />
             <v-text-field
@@ -290,6 +311,7 @@ async function onSubmit() {
               label="Health insurance"
               variant="outlined"
               density="comfortable"
+              :loading="saving"
               :rules="rules.healthInsurance"
             />
             <v-text-field
@@ -297,6 +319,7 @@ async function onSubmit() {
               label="Desired health insurance company"
               variant="outlined"
               density="comfortable"
+              :loading="saving"
               :rules="rules.desiredHealthInsuranceCompany"
             />
 
@@ -305,6 +328,7 @@ async function onSubmit() {
               label="Private health insurance name"
               variant="outlined"
               density="comfortable"
+              :loading="saving"
               :rules="rules.privateHealthInsuranceName"
             />
             <v-text-field
@@ -312,6 +336,7 @@ async function onSubmit() {
               label="Private health insurance contribution"
               variant="outlined"
               density="comfortable"
+              :loading="saving"
               :rules="rules.privateHealthInsuranceContribution"
             />
             <v-text-field
@@ -319,6 +344,7 @@ async function onSubmit() {
               label="Private nursing insurance contribution"
               variant="outlined"
               density="comfortable"
+              :loading="saving"
               :rules="rules.privateNursingInsuranceContribution"
             />
             <v-text-field
@@ -326,6 +352,7 @@ async function onSubmit() {
               label="Last private health insurance"
               variant="outlined"
               density="comfortable"
+              :loading="saving"
               :rules="rules.lastPrivateHealthInsurance"
             />
 
@@ -348,6 +375,7 @@ async function onSubmit() {
               color="primary"
               hide-details
               class="mt-2"
+              :loading="saving"
               label="Request from pension insurance"
             />
           </div>
@@ -364,13 +392,6 @@ async function onSubmit() {
           >SAVE</v-btn
         >
       </div>
-
-      <v-alert v-if="success" type="success" variant="tonal" class="mt-4">
-        {{ "Tax and Insurance data saved successfully" }}
-      </v-alert>
-      <v-alert v-if="error" type="error" variant="tonal" class="mt-4">
-        {{ error }}
-      </v-alert>
     </v-form>
   </section>
 </template>

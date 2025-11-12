@@ -8,6 +8,9 @@ import TaxForm from "~/components/TaxForm.vue";
 const route = useRoute();
 const router = useRouter();
 
+useHead({
+  title: "Personal Settings",
+});
 const tabList = [
   { key: "personal", label: "Personal" },
   { key: "bank-data", label: "Bank Data" },
