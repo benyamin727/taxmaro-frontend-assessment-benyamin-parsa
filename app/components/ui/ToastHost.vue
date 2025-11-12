@@ -21,7 +21,6 @@ const items = computed(() => [...toasts.value].reverse());
         variant="elevated"
         location="top"
         class="mb-2 shadow-lg"
-        :class="`bg-${colorOf(t.kind)}`"
         data-test="toast-snackbar"
         @click="dismiss(t.id)"
       >
