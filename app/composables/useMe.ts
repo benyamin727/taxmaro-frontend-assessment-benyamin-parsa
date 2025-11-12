@@ -1,7 +1,10 @@
 import type { Me, PersonalPayload, BankPayload, TaxPayload } from '~/types/me'
 
 export function useMe() {
-  const { data, pending, error, refresh } = useAsyncData<Me>('me', () => $fetch('/api/me'))
+  const { data, pending, error, refresh } = useAsyncData<Me>('me', () => $fetch('/api/me'), {
+    server: false,
+    lazy: false,
+  })
 
   const update = async (payload: Partial<Me>) => {
     await $fetch('/api/me', { method: 'PUT', body: payload })

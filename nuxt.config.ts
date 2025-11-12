@@ -4,6 +4,7 @@ export default defineNuxtConfig({
   devtools: { enabled: false },
   modules: ["@nuxt/eslint", "@nuxt/fonts", "vuetify-nuxt-module"],
   ssr: true,
+  nitro: { preset: 'vercel' },
 
   // when enabling ssr option you need to disable inlineStyles and maybe devLogs
   features: {
