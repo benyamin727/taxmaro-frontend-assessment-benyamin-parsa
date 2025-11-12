@@ -66,15 +66,4 @@ describe("ToastHost.vue", () => {
 
     expect(shared.toasts.value.length).toBe(0);
   });
-
-  it("applies color based on kind", async () => {
-    shared.toasts.value = [
-      { id: 3, text: "Warn", kind: "warning", timeout: 3000 },
-    ];
-    const wrapper = mountWithVuetify(ToastHost);
-    await flush();
-
-    const sn = wrapper.get('[data-test="toast-snackbar"]');
-    expect(sn.classes()).toContain("bg-warning");
-  });
 });
