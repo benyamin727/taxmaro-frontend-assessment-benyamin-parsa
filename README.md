@@ -84,3 +84,4 @@ tests/
      ├─ mountWithVuetify.ts
      └─ vForm-stub.ts
 
+// test husky

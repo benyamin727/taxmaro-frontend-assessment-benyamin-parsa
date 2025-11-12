@@ -1,4 +1,9 @@
+cat > .husky/pre-push <<'SH'
 #!/usr/bin/env sh
 . "$(dirname -- "$0")/_/husky.sh"
 
+# Type-check + Unit tests
 pnpm typecheck && pnpm test
+SH
+
+chmod +x .husky/pre-push
