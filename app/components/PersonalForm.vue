@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { reactive, ref, watchEffect } from "vue";
+import { reactive, ref } from "vue";
 import { useMe } from "~/composables/useMe";
 import {
   required,
@@ -37,21 +37,24 @@ const form = reactive({
   department: "",
 });
 
-watchEffect(() => {
-  const d = data.value;
-  if (!d) return;
-  form.firstName = d.firstName ?? "";
-  form.lastName = d.lastName ?? "";
-  form.email = d.email ?? "";
-  form.phone = d.phone ?? "";
-  form.country = d.country ?? "";
-  form.zip = d.zip ?? "";
-  form.state = d.state ?? "";
-  form.city = d.city ?? "";
-  form.address = d.address ?? "";
-  form.position = d.position ?? "";
-  form.department = d.department ?? "";
-});
+watch(
+  () => data.value,
+  (d) => {
+    if (!d) return;
+    form.firstName = d.firstName ?? "";
+    form.lastName = d.lastName ?? "";
+    form.email = d.email ?? "";
+    form.phone = d.phone ?? "";
+    form.country = d.country ?? "";
+    form.zip = d.zip ?? "";
+    form.state = d.state ?? "";
+    form.city = d.city ?? "";
+    form.address = d.address ?? "";
+    form.position = d.position ?? "";
+    form.department = d.department ?? "";
+  },
+  { immediate: true },
+);
 
 const rules = {
   firstName: [combine(required, minLen(2))],
@@ -243,34 +246,40 @@ const onSubmit = async () => {
   </section>
 </template>
 
-<style scoped>
+<style scoped lang="scss">
 .personal {
   display: block;
-}
-.personal__group {
-  padding: 16px;
-  background: #fff;
-}
-.personal__group + .personal__group {
-  margin-top: 16px;
-}
-.personal__group-title {
-  margin: 0 0 12px;
-  font-size: 1.1rem;
-  font-weight: 700;
-  color: #3b3b3b;
-}
-.personal__field {
-  margin-bottom: 12px;
-}
-.personal__actions {
-  display: flex;
-  justify-content: center;
-  padding-top: 16px;
-}
-.personal__save {
-  max-width: 220px;
-  background: #1c1c1c !important;
-  color: #fff !important;
+
+  &__group {
+    padding: 16px;
+    background: #fff;
+
+    & + & {
+      margin-top: 16px;
+    }
+  }
+
+  &__group-title {
+    margin: 0 0 12px;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #3b3b3b;
+  }
+
+  &__field {
+    margin-bottom: 12px;
+  }
+
+  &__actions {
+    display: flex;
+    justify-content: center;
+    padding-top: 16px;
+  }
+
+  &__save {
+    max-width: 220px;
+    background: #1c1c1c !important;
+    color: #fff !important;
+  }
 }
 </style>

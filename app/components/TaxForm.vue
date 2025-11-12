@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { reactive, ref, watchEffect } from "vue";
+import { reactive, ref } from "vue";
 import { useMe } from "~/composables/useMe";
 import { required, minLen, combine } from "~/utils/validation";
 import { getErrorMessage } from "~/utils/helper";
@@ -41,37 +41,41 @@ const form = reactive({
   requestFromPensionInsurance: false,
 });
 
-watchEffect(() => {
-  const d = data.value;
-  if (!d) return;
-  form.taxId = d.tax.taxId == "0" ? "" : d.tax?.taxId ?? null;
-  form.noTaxId = d.tax?.noTaxId ?? false;
-  form.extraJob = d.tax?.extraJob ?? "";
-  form.disability = d.tax?.disability ?? "";
-  form.information = d.tax?.information ?? "";
-  form.employmentStatus = d.tax?.employmentStatus ?? "";
-  form.secondSalary = d.tax?.secondSalary ?? "";
+watch(
+  () => data.value,
+  (d) => {
+    if (!d) return;
 
-  form.ssn = d.insurance?.ssn == "0" ? "" : d.insurance?.ssn ?? null;
-  form.noSsn = d.insurance?.noSsn ?? false;
-  form.birthCountry = d.insurance?.birthCountry ?? "";
-  form.birthName = d.insurance?.birthName ?? "";
-  form.healthInsuranceType = d.insurance?.healthInsuranceType ?? "";
-  form.healthInsurance = d.insurance?.healthInsurance ?? "";
-  form.desiredHealthInsuranceCompany =
-    d.insurance?.desiredHealthInsuranceCompany ?? "";
-  form.privateHealthInsuranceName =
-    d.insurance?.privateHealthInsuranceName ?? "";
-  form.privateHealthInsuranceContribution =
-    d.insurance?.privateHealthInsuranceContribution ?? "";
-  form.privateNursingInsuranceContribution =
-    d.insurance?.privateNursingInsuranceContribution ?? "";
-  form.lastPrivateHealthInsurance =
-    d.insurance?.lastPrivateHealthInsurance ?? "";
-  form.haveChildren = d.insurance?.haveChildren ?? "";
-  form.requestFromPensionInsurance =
-    d.insurance?.requestFromPensionInsurance ?? false;
-});
+    form.taxId = d.tax.taxId == "0" ? "" : (d.tax?.taxId ?? null);
+    form.noTaxId = d.tax?.noTaxId ?? false;
+    form.extraJob = d.tax?.extraJob ?? "";
+    form.disability = d.tax?.disability ?? "";
+    form.information = d.tax?.information ?? "";
+    form.employmentStatus = d.tax?.employmentStatus ?? "";
+    form.secondSalary = d.tax?.secondSalary ?? "";
+
+    form.ssn = d.insurance?.ssn == "0" ? "" : (d.insurance?.ssn ?? null);
+    form.noSsn = d.insurance?.noSsn ?? false;
+    form.birthCountry = d.insurance?.birthCountry ?? "";
+    form.birthName = d.insurance?.birthName ?? "";
+    form.healthInsuranceType = d.insurance?.healthInsuranceType ?? "";
+    form.healthInsurance = d.insurance?.healthInsurance ?? "";
+    form.desiredHealthInsuranceCompany =
+      d.insurance?.desiredHealthInsuranceCompany ?? "";
+    form.privateHealthInsuranceName =
+      d.insurance?.privateHealthInsuranceName ?? "";
+    form.privateHealthInsuranceContribution =
+      d.insurance?.privateHealthInsuranceContribution ?? "";
+    form.privateNursingInsuranceContribution =
+      d.insurance?.privateNursingInsuranceContribution ?? "";
+    form.lastPrivateHealthInsurance =
+      d.insurance?.lastPrivateHealthInsurance ?? "";
+    form.haveChildren = d.insurance?.haveChildren ?? "";
+    form.requestFromPensionInsurance =
+      d.insurance?.requestFromPensionInsurance ?? false;
+  },
+  { immediate: true },
+);
 
 const taxIdRule = (v: string) => (form.noTaxId ? true : required(v));
 const ssnRule = (v: string) => (form.noSsn ? true : required(v));
@@ -396,24 +400,29 @@ async function onSubmit() {
   </section>
 </template>
 
-<style scoped>
-.tax__group {
-  padding: 16px;
-  background: #fff;
-}
-.tax__actions {
-  display: flex;
-  justify-content: center;
-}
-.tax__save {
-  max-width: 220px;
-  background: #1c1c1c !important;
-  color: #fff !important;
-}
-.tax__group-title {
-  margin: 0 0 12px;
-  font-size: 1.1rem;
-  font-weight: 700;
-  color: #3b3b3b;
+<style scoped lang="scss">
+.tax {
+  &__group {
+    padding: 16px;
+    background: #fff;
+  }
+
+  &__actions {
+    display: flex;
+    justify-content: center;
+  }
+
+  &__save {
+    max-width: 220px;
+    background: #1c1c1c !important;
+    color: #fff !important;
+  }
+
+  &__group-title {
+    margin: 0 0 12px;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #3b3b3b;
+  }
 }
 </style>

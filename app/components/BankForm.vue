@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { reactive, ref, watchEffect } from "vue";
+import { reactive, ref } from "vue";
 import { useMe } from "~/composables/useMe";
 import {
   required,
@@ -33,17 +33,20 @@ const form = reactive({
   bankId: "",
 });
 
-watchEffect(() => {
-  const d = data.value;
-  if (!d) return;
-  form.payee = d.bankDetail?.payee ?? "";
-  form.paymentMethod = d.bankDetail?.paymentMethod ?? "";
-  form.bankName = d.bankDetail?.bankName ?? "";
-  form.bankBic = d.bankDetail?.bankBic ?? "";
-  form.iban = d.bankDetail?.iban ?? "";
-  form.id = d.bankDetail?.id ?? "";
-  form.bankId = d.bankDetail?.bankId ?? "";
-});
+watch(
+  () => data.value?.bankDetail,
+  (bankDetail) => {
+    if (!bankDetail) return;
+    form.payee = bankDetail.payee ?? "";
+    form.paymentMethod = bankDetail.paymentMethod ?? "";
+    form.bankName = bankDetail.bankName ?? "";
+    form.bankBic = bankDetail.bankBic ?? "";
+    form.iban = bankDetail.iban ?? "";
+    form.id = bankDetail.id ?? "";
+    form.bankId = bankDetail.bankId ?? "";
+  },
+  { immediate: true },
+);
 
 const rules = {
   payee: [combine(required, minLen(2))],
@@ -205,18 +208,22 @@ const paymentOptions = [
   </section>
 </template>
 
-<style scoped>
-.bank__group {
-  padding: 16px;
-  background: #fff;
-}
-.bank__actions {
-  display: flex;
-  justify-content: center;
-}
-.bank__save {
-  max-width: 220px;
-  background: #1c1c1c !important;
-  color: #fff !important;
+<style scoped lang="scss">
+.bank {
+  &__group {
+    padding: 16px;
+    background: #fff;
+  }
+
+  &__actions {
+    display: flex;
+    justify-content: center;
+  }
+
+  &__save {
+    max-width: 220px;
+    background: #1c1c1c !important;
+    color: #fff !important;
+  }
 }
 </style>
