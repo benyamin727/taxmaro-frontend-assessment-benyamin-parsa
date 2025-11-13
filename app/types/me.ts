@@ -83,3 +83,4 @@ export const insuranceSchema = z.object({
   insurance: meSchema.shape.insurance,
 })
 export type InsurancePayload = z.infer<typeof insuranceSchema>
+export type MeResponse = { success: boolean; data: Me } | Me
